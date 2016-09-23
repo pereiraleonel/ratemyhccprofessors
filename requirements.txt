@@ -1,0 +1,4 @@
+selenium
+python 2.7.9
+firefox 47.0.1
+webbrowser
