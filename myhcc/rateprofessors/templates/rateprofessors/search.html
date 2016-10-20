@@ -1,0 +1,54 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'rateprofessors/style.css' %}" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+	<script>
+	$(function() {
+		
+		$("#section").autocomplete({
+		  minLength: 3,
+		  source:"."
+		  <!-- source:[{"label":"hola"}, {"label":"holla"}, {"label":"lapiz"}, {"label":"lapida"}, {"label":"loceta"}, {"label":"loreto"}]-->
+		  <!-- source: ["hola", "holla", "lapiz", "lapida", "loceta", "loreto"]-->
+		    
+		});
+	});
+	</script>
+
+<form action = "." method="GET">
+	<div class="ui-widget">
+	  <input id="section" name ="query" placeholder = "Search"/>
+	  <input type="submit" value="search" />
+	</div>
+</form>	
+
+{% if results%}
+		<table>
+		   <tr><th>Class</th><th>Class nbr</th><th>Date</th><th>Instructor</th><th>Rate</th><th>Campus</th><th>Status</th><tr>
+		{% for result in results %}
+			<tr>
+				<td><a href ={{result.link}}>{{ result.class_id.class_short_name }} - {{ result.class_id.class_long_name }}</a></td>
+				<td>{{ result.section_number }}</td>
+				<td>{{ result.schedule }}</td>
+				<td>
+					{% if not "None" in result.instructor.link_id %}
+						<a href=http://www.ratemyprofessors.com/ShowRatings.jsp?tid={{result.instructor.link_id}} >{{ result.instructor.first_name}} {{result.instructor.last_name}}</a>
+					{% else %}
+						{{ result.instructor.first_name}} {{result.instructor.last_name}}
+					{% endif %}
+				</td>
+				<td>
+					{% if not "None" in result.instructor.ranking %}
+						{{ result.instructor.ranking}}
+					{% else %}
+						N/A
+					{% endif %}
+				</td>
+				<td>{{ result.campus.campus_short_name}}</td>
+				<td>{{ result.status.status_name}}</td>
+			</tr>
+		{% endfor %}
+		</table>
+{% endif %}
+
